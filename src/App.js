@@ -1,27 +1,23 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { Alert } from './components/Alert';
-import { Navbar } from './components/Navbar';
+import { Route, Switch } from 'react-router-dom';
 import { Home } from './pages/Home';
-import { AlertState } from './context/alert/AlertState';
-import { ProductsState } from './context/products/ProductsState';
+import { Navbar } from './components/Navbar';
+import { Alert } from './components/Alert';
 
-function App() {
+const App = () => {
   return (
-    <ProductsState>
-      <AlertState>
-        <BrowserRouter>
-          <Navbar/>
-          <div className="container pt-4">
-            <Alert alert={{ text: 'Test alert111' }}/>
-            <Switch>
-              <Route path="/" exact component={Home}/>
-            </Switch>
-          </div>
-        </BrowserRouter>
-      </AlertState>
-    </ProductsState>
+    <div>
+      <Navbar/>
+
+      <div className="container pt-4">
+        <Alert/>
+
+        <Switch>
+          <Route path="/" exact component={Home}/>
+        </Switch>
+      </div>
+    </div>
   );
-}
+};
 
 export default App;

@@ -1,24 +1,26 @@
-import React, { useContext, useState } from 'react';
-import { AlertContext } from '../context/alert/AlertContext';
-import { ProductsContext } from '../context/products/ProductsContext';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { hideAlert, showAlert } from '../store/actions/alertActions';
+import { clearProducts, search } from '../store/actions/productsActions';
 
 export const Search = () => {
+  const dispatch = useDispatch();
   const [value, setValue] = useState('');
-  const alert = useContext(AlertContext);
-  const products = useContext(ProductsContext);
 
   const onSubmit = event => {
     if (event.key !== 'Enter') {
       return;
     }
 
+    dispatch(clearProducts());
+
     if (value.trim()) {
-      alert.hide();
-      products.search(value.trim());
+      dispatch(hideAlert());
+      dispatch(search(value.trim()));
     } else {
-      alert.show('Please enter the product name');
+      dispatch(showAlert('Please enter the product name'));
     }
-  }
+  };
 
   return (
     <div className="form-group">

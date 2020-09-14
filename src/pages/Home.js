@@ -1,14 +1,18 @@
-import React, { useContext } from 'react';
-import { Search } from '../components/Search';
-import { ProductsContext } from '../context/products/ProductsContext';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Card } from '../components/Card';
+import { Control } from '../components/Control';
+import { Search } from '../components/Search';
 
 export const Home = () => {
-  const { loading, products } = useContext(ProductsContext);
+  const loading = useSelector(s => s.productsReducer.loading);
+  const products = useSelector(s => s.productsReducer.products);
 
   return (
     <>
       <Search/>
+
+      <Control/>
 
       <div className="row">
         {loading
