@@ -1,32 +1,38 @@
 import {
-  CLEAR_PRODUCT,
-  SEARCH_PRODUCT,
+  CLEAR_PRODUCTS,
+  SEARCH_PRODUCTS,
   SET_LOADING,
-  SET_SORT
+  SET_PARAMS
 } from '../constants';
 
 const initialState = {
-  currentPage: '',
+  currentPage: 1,
   loading: false,
   nextPageUrl: '',
   previousPageUrl: '',
   products: [],
-  sort: '',
+  search: '',
+  sortField: 'name',
+  sortDirection: 'asc',
   totalCount: 0
 };
 
 export default function productsReducer(state = initialState, action) {
   switch (action.type) {
-    case CLEAR_PRODUCT:
+    case CLEAR_PRODUCTS:
       return {
         ...state,
         currentPage: initialState.currentPage,
+        loading: false,
         nextPageUrl: initialState.nextPageUrl,
         previousPageUrl: initialState.previousPageUrl,
         products: initialState.products,
+        search: initialState.search,
+        sortField: initialState.sortField,
+        sortDirection: initialState.sortDirection,
         totalCount: initialState.totalCount
       };
-    case SEARCH_PRODUCT:
+    case SEARCH_PRODUCTS:
       return {
         ...state,
         currentPage: action.currentPage,
@@ -41,10 +47,12 @@ export default function productsReducer(state = initialState, action) {
         ...state,
         loading: true
       };
-    case SET_SORT:
+    case SET_PARAMS:
       return {
         ...state,
-        sort: action.sort
+        search: action.search,
+        sortField: action.sortField,
+        sortDirection: action.sortDirection
       };
     default:
       return state;

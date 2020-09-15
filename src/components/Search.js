@@ -1,22 +1,24 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { hideAlert, showAlert } from '../store/actions/alertActions';
-import { clearProducts, search } from '../store/actions/productsActions';
+import { search } from '../store/actions/productsActions';
 
 export const Search = () => {
   const dispatch = useDispatch();
-  const [value, setValue] = useState('');
+  const searchValue = useSelector(s => s.productsReducer.search);
+  const sortField = useSelector(s => s.productsReducer.sortField);
+  const sortDirection = useSelector(s => s.productsReducer.sortDirection);
+  const currentPage = useSelector(s => s.productsReducer.currentPage);
 
-  const onSubmit = event => {
-    if (event.key !== 'Enter') {
-      return;
-    }
+  useEffect(() => {
+    dispatch(search(searchValue.trim(), sortField, sortDirection, currentPage));
+    // eslint-disable-next-line
+  }, []);
 
-    dispatch(clearProducts());
-
+  const setSearch = value => {
     if (value.trim()) {
       dispatch(hideAlert());
-      dispatch(search(value.trim()));
+      dispatch(search(value.trim(), sortField, sortDirection, currentPage));
     } else {
       dispatch(showAlert('Please enter the product name'));
     }
@@ -26,11 +28,9 @@ export const Search = () => {
     <div className="form-group">
       <input
         className="form-control"
-        onChange={e => setValue(e.target.value)}
-        onKeyPress={onSubmit}
+        onChange={e => setSearch(e.target.value)}
         placeholder="Enter the product name..."
         type="text"
-        value={value}
       />
     </div>
   );

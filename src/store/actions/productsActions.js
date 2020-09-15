@@ -1,27 +1,35 @@
 import {
-  CLEAR_PRODUCT,
-  SEARCH_PRODUCT,
+  CLEAR_PRODUCTS,
+  SEARCH_PRODUCTS,
   SET_LOADING,
-  // SET_SORT,
+  SET_PARAMS,
   URL
 } from '../constants';
 import axios from 'axios';
+import { showAlert } from './alertActions';
 
-export const search = value => {
+export const search = (value, sortField, sortDirection, page = 1) => {
   return async dispatch => {
     dispatch(setLoading());
 
-    const response = await axios.get(`${URL}?${value}`);
+    dispatch(setParams(value, sortField, sortDirection));
 
-    console.log(response.data);
+    const search = value === '' ? '' : `search=${value}&`;
+    const url = `${URL}?${search}sort_field=${sortField}&sort_direction=${sortDirection}&page=${page}`;
 
-    dispatch({
-      type: SEARCH_PRODUCT,
-      currentPage: response.data.current_page,
-      nextPageUrl: response.data.next_page_url,
-      previousPageUrl: response.data.previous_page_url,
-      products: response.data.products,
-      totalCount: response.data.total_count
+    axios.get(url).then(response => {
+        dispatch({
+          type: SEARCH_PRODUCTS,
+          currentPage: response.data.current_page,
+          nextPageUrl: response.data.next_page_url,
+          previousPageUrl: response.data.previous_page_url,
+          products: response.data.products,
+          totalCount: response.data.total_count
+        });
+      }
+    ).catch((error) => {
+      dispatch(showAlert(error.response.data));
+      dispatch(clearProducts());
     });
   };
 };
@@ -30,6 +38,17 @@ const setLoading = () => {
   return { type: SET_LOADING };
 };
 
-export const clearProducts = () => {
-  return { type: CLEAR_PRODUCT };
+const setParams = (search, sortField, sortDirection) => {
+  return {
+    type: SET_PARAMS,
+    search,
+    sortField,
+    sortDirection
+  };
+};
+
+const clearProducts = () => {
+  return {
+    type: CLEAR_PRODUCTS
+  };
 };

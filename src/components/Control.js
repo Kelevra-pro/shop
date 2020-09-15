@@ -1,34 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { search } from '../store/actions/productsActions';
 
 export const Control = () => {
-  const [value, setValue] = useState('nameAsc');
+  const dispatch = useDispatch();
+  const searchValue = useSelector(s => s.productsReducer.search);
+  const currentPage = useSelector(s => s.productsReducer.currentPage);
 
-  const setSelect = value => {
-    console.log(value);
+  const setSelect = sort => {
+    const sortMap = {
+      nameAsc: ['name', 'asc'],
+      nameDesc: ['name', 'desc'],
+      priceAsc: ['price', 'asc'],
+      priceDesc: ['price', 'desc']
+    };
+
+    dispatch(search(searchValue, ...sortMap[sort], currentPage));
   };
 
   return (
-    <div className="container my-4">
-      <div className="row align-items-center">
-        <div className="col-sm">
-          <form className="form-inline" onSubmit={setSelect}>
-            <p className="my-1">Sort by</p>
-            <select className="custom-select" value={value}
-                    onChange={e => setValue(e.target.value)}>
-              <option value="nameAsc">Name: Alphabetize</option>
-              <option value="nameDesc">Name: Reverse</option>
-              <option value="priceAsc">Price: Low to High</option>
-              <option value="priceDesc">Price: High to Low</option>
-            </select>
-          </form>
-        </div>
-
-        <div className="col-sm d-flex align-baseline justify-content-end">
-          <a className="mx-1" href="/"><i
-            className="material-icons">list</i></a>
-          <a className="mx-1" href="/"><i className="material-icons">grid_on</i></a>
-        </div>
-      </div>
-    </div>
+    <form className="form-inline my-4">
+      <p className="m-1">Sort by</p>
+      <select className="custom-select"
+              onChange={e => setSelect(e.target.value)}>
+        <option value="nameAsc">Name: Alphabetical</option>
+        <option value="nameDesc">Name: Reverse</option>
+        <option value="priceAsc">Price: Low to High</option>
+        <option value="priceDesc">Price: High to Low</option>
+      </select>
+    </form>
   );
 };
