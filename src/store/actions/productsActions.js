@@ -9,7 +9,7 @@ import axios from 'axios';
 import { showAlert } from './alertActions';
 
 export const search = (value, sortField, sortDirection, page = 1) => {
-  return async dispatch => {
+  return dispatch => {
     dispatch(setLoading());
 
     dispatch(setParams(value, sortField, sortDirection));
